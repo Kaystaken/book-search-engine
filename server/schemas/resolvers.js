@@ -34,10 +34,19 @@ const resolvers = {
 
       return { token, user };
     },
-    saveBook: async (parent, { authors, description, title, bookId, image, link }, context) => {
+    saveBook: async (parent, bookToSave, context) => {
       // If context has a `user` property, that means the user executing this mutation has a valid JWT and is logged in
       if (context.user) {
-        return Book.create({ authors, description, title, bookId, image, link });
+        return User.findOneAndUpdate(
+          { _id: context.user._id },
+          {
+            $addToSet: { savedBooks: bookToSave },
+          },
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
       }
       // If user attempts to execute this mutation and isn't logged in, throw an error
       throw AuthenticationError;
@@ -45,10 +54,16 @@ const resolvers = {
     removeBook: async (parent, { bookId }, context) => {
       // If context has a `user` property, that means the user executing this mutation has a valid JWT and is logged in
       if (context.user) {
-        return Book.findOneAndDelete({ bookId });
+        return User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $pull: { savedBooks: { bookId }}},
+          { new: true }
+        );
       }
       // If user attempts to execute this mutation and isn't logged in, throw an error
       throw AuthenticationError;
     },
   }
 };
+
+module.exports = resolvers;
