@@ -27,6 +27,10 @@ Modify the existing authentication middleware so that it works in the context of
 N/A
 
 ## Usage
+DEPLOYED APP:
+https://book-search-engines.onrender.com/
+
+GITHUB REPO:
 https://kaystaken.github.io/book-search-engine
 
 ![Alt text](<Screenshot 2024-02-03 at 11.17.14 PM.png>)
